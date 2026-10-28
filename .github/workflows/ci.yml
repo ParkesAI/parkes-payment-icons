@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    name: Ruby ${{ matrix.runtime.ruby }} / Rails ${{ matrix.runtime.rails }} / ${{ matrix.pipeline }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - { ruby: '3.2', rails: '7.0' }
+          - { ruby: '3.2', rails: '7.1' }
+          - { ruby: '3.2', rails: '7.2' }
+          - { ruby: '3.3', rails: '8.0' }
+          - { ruby: '3.4', rails: '8.1' }
+          - { ruby: '4.0', rails: '8.1' }
+        pipeline: [propshaft, sprockets]
+    env:
+      RAILS_VERSION: '~> ${{ matrix.runtime.rails }}.0'
+      ASSET_PIPELINE: ${{ matrix.pipeline }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
+        with:
+          ruby-version: ${{ matrix.runtime.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test upstream:check compatibility
+
+  provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - run: bundle exec rake upstream:verify
