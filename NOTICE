@@ -1,0 +1,12 @@
+Parkes payment icons
+Rails packaging maintained by Parkes contributors.
+
+Artwork: SVG Credit Card & Payment Icons by Aaron Fagan and contributors.
+https://github.com/aaronfagan/svg-credit-card-payment-icons
+Distributed under the Apache License, Version 2.0; see LICENSE.
+The pinned source revision and file checksums are recorded in upstream.json.
+Any upstream NOTICE is preserved verbatim in vendor/upstream/NOTICE.
+
+Card and payment network names and logos are trademarks of their respective
+owners. Neither this package nor its license grants trademark rights or implies
+endorsement by those owners or the upstream authors.
